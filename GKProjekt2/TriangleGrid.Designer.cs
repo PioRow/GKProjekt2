@@ -30,10 +30,14 @@
         {
             splitContainer1 = new SplitContainer();
             DrawingBox = new PictureBox();
+            ObjColorPick = new Button();
             ShowGrid = new CheckBox();
             GridSizeBar = new TrackBar();
             debug = new Label();
             SizeLabel = new Label();
+            colorPickDIalog = new ColorDialog();
+            lightColorPick = new Button();
+            lightColorPickDIal = new ColorDialog();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -57,6 +61,8 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.BackColor = SystemColors.ActiveCaption;
+            splitContainer1.Panel2.Controls.Add(lightColorPick);
+            splitContainer1.Panel2.Controls.Add(ObjColorPick);
             splitContainer1.Panel2.Controls.Add(ShowGrid);
             splitContainer1.Panel2.Controls.Add(GridSizeBar);
             splitContainer1.Panel2.Controls.Add(debug);
@@ -78,6 +84,17 @@
             DrawingBox.TabStop = false;
             DrawingBox.Paint += DrawingBox_Paint;
             // 
+            // ObjColorPick
+            // 
+            ObjColorPick.Location = new Point(8, 130);
+            ObjColorPick.Name = "ObjColorPick";
+            ObjColorPick.Size = new Size(73, 79);
+            ObjColorPick.TabIndex = 5;
+            ObjColorPick.Text = "wybierz\r\nkolor\r\nobiektu\r\n";
+            ObjColorPick.TextAlign = ContentAlignment.TopLeft;
+            ObjColorPick.UseVisualStyleBackColor = true;
+            ObjColorPick.Click += ColorPick_Click;
+            // 
             // ShowGrid
             // 
             ShowGrid.AutoSize = true;
@@ -90,13 +107,14 @@
             ShowGrid.TabIndex = 4;
             ShowGrid.Text = "wyswietl siatke";
             ShowGrid.UseVisualStyleBackColor = true;
+            ShowGrid.CheckedChanged += ShowGrid_CheckedChanged;
             // 
             // GridSizeBar
             // 
             GridSizeBar.Location = new Point(3, 37);
             GridSizeBar.Margin = new Padding(3, 4, 3, 4);
             GridSizeBar.Maximum = 20;
-            GridSizeBar.Minimum = 5;
+            GridSizeBar.Minimum = 1;
             GridSizeBar.Name = "GridSizeBar";
             GridSizeBar.Size = new Size(119, 56);
             GridSizeBar.TabIndex = 3;
@@ -120,6 +138,16 @@
             SizeLabel.Size = new Size(142, 20);
             SizeLabel.TabIndex = 1;
             SizeLabel.Text = "Wymiar siatki [5-20]";
+            // 
+            // lightColorPick
+            // 
+            lightColorPick.Location = new Point(87, 130);
+            lightColorPick.Name = "lightColorPick";
+            lightColorPick.Size = new Size(78, 79);
+            lightColorPick.TabIndex = 6;
+            lightColorPick.Text = "wybierz\r\nkolor\r\nswiatla\r\n";
+            lightColorPick.UseVisualStyleBackColor = true;
+            lightColorPick.Click += lightColorPick_Click;
             // 
             // TriangleGrid
             // 
@@ -149,5 +177,9 @@
         private Label debug;
         private TrackBar GridSizeBar;
         private CheckBox ShowGrid;
+        private Button ObjColorPick;
+        private ColorDialog colorPickDIalog;
+        private Button lightColorPick;
+        private ColorDialog lightColorPickDIal;
     }
 }

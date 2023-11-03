@@ -1,15 +1,25 @@
+using System.Numerics;
+
 namespace GKProjekt2
 {
     public partial class TriangleGrid : Form
     {
         private List<Polygon> Polygons;
         private DirectBitmap DrawingBitMap;
+        private double[,] BezierSurface;
+        int ActualWidth;
+        int ActualHeight;
+        Color ObjectColor;
+        Color LightColor;
         public TriangleGrid()
         {
+            ObjectColor = Color.White;
             InitializeComponent();
             DrawingBitMap = new DirectBitmap(DrawingBox.Width, DrawingBox.Height);
             Polygons = new List<Polygon>();
+            BezierSurface = new double[4, 4];
             CreateGrid();
+            FIllWithColor();
             PutTriangles();
 
         }
@@ -29,12 +39,13 @@ namespace GKProjekt2
         }
         private void FIllWithColor()
         {
-            Parallel.ForEach(Polygons, Polygon => { Polygon.FillPolygon(DrawingBitMap); });
+            Parallel.ForEach(Polygons, Polygon => { Polygon.FillPolygonWIthLightedColor(DrawingBitMap, ObjectColor); });
         }
         private void CreateGrid()
         {
             int TrianglesPerSide = GridSizeBar.Value;
             int TriangleArmLength = DrawingBox.Width / TrianglesPerSide;
+            ActualHeight = ActualWidth = TriangleArmLength * TrianglesPerSide;
             for (int j = 0; j < TrianglesPerSide; j++)
             {
                 for (int i = 0; i < TrianglesPerSide; i++)
@@ -82,13 +93,43 @@ namespace GKProjekt2
             Polygons.Clear();
 
             CreateGrid();
+            PaintBMapWithColor();
+
+
+        }
+        private void PaintBMapWithColor()
+        {
+            Graphics.FromImage(DrawingBitMap.Bitmap).Clear(Color.White);
+            FIllWithColor();
             if (ShowGrid.Checked)
             {
-                DrawingBitMap.Dispose();
-                DrawingBitMap = new DirectBitmap(DrawingBox.Width, DrawingBox.Height);
                 PutTriangles();
-                DrawingBox.Invalidate();
+
             }
+            DrawingBox.Invalidate();
+        }
+        private void ColorPick_Click(object sender, EventArgs e)
+        {
+            if (colorPickDIalog.ShowDialog() == DialogResult.OK)
+            {
+                ObjectColor = colorPickDIalog.Color;
+            }
+            PaintBMapWithColor();
+
+        }
+
+        private void ShowGrid_CheckedChanged(object sender, EventArgs e)
+        {
+            PaintBMapWithColor();
+        }
+
+        private void lightColorPick_Click(object sender, EventArgs e)
+        {
+            if(lightColorPickDIal.ShowDialog()==DialogResult.OK)
+            {
+                LightColor= lightColorPickDIal.Color;
+            }
+
         }
     }
 }
