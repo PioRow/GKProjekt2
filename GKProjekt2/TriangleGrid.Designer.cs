@@ -30,19 +30,45 @@
         {
             splitContainer1 = new SplitContainer();
             DrawingBox = new PictureBox();
+            label1 = new Label();
+            CPModCB = new GroupBox();
+            CPYlabel = new Label();
+            CPXLabel = new Label();
+            controlPointvalLabel = new Label();
+            CPXCB = new ComboBox();
+            ConfirmCPButton = new Button();
+            CPYCB = new ComboBox();
+            CPVal = new TextBox();
+            SelectPicture = new Button();
+            fillWPicture = new RadioButton();
+            lightHeightLabel = new Label();
+            lightHeight = new TrackBar();
+            mLabel = new Label();
+            mBar = new TrackBar();
+            ksLabel = new Label();
+            kdLabel = new Label();
+            ksBar = new TrackBar();
+            kdBar = new TrackBar();
+            PlainColorFIll = new RadioButton();
+            lightColorPick = new Button();
             ObjColorPick = new Button();
             ShowGrid = new CheckBox();
             GridSizeBar = new TrackBar();
             debug = new Label();
             SizeLabel = new Label();
             colorPickDIalog = new ColorDialog();
-            lightColorPick = new Button();
             lightColorPickDIal = new ColorDialog();
+            selectPictureDialog = new OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DrawingBox).BeginInit();
+            CPModCB.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)lightHeight).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)mBar).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)ksBar).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)kdBar).BeginInit();
             ((System.ComponentModel.ISupportInitialize)GridSizeBar).BeginInit();
             SuspendLayout();
             // 
@@ -61,6 +87,19 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.BackColor = SystemColors.ActiveCaption;
+            splitContainer1.Panel2.Controls.Add(label1);
+            splitContainer1.Panel2.Controls.Add(CPModCB);
+            splitContainer1.Panel2.Controls.Add(SelectPicture);
+            splitContainer1.Panel2.Controls.Add(fillWPicture);
+            splitContainer1.Panel2.Controls.Add(lightHeightLabel);
+            splitContainer1.Panel2.Controls.Add(lightHeight);
+            splitContainer1.Panel2.Controls.Add(mLabel);
+            splitContainer1.Panel2.Controls.Add(mBar);
+            splitContainer1.Panel2.Controls.Add(ksLabel);
+            splitContainer1.Panel2.Controls.Add(kdLabel);
+            splitContainer1.Panel2.Controls.Add(ksBar);
+            splitContainer1.Panel2.Controls.Add(kdBar);
+            splitContainer1.Panel2.Controls.Add(PlainColorFIll);
             splitContainer1.Panel2.Controls.Add(lightColorPick);
             splitContainer1.Panel2.Controls.Add(ObjColorPick);
             splitContainer1.Panel2.Controls.Add(ShowGrid);
@@ -83,6 +122,215 @@
             DrawingBox.TabIndex = 0;
             DrawingBox.TabStop = false;
             DrawingBox.Paint += DrawingBox_Paint;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(0, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(50, 20);
+            label1.TabIndex = 24;
+            label1.Text = "label1";
+            // 
+            // CPModCB
+            // 
+            CPModCB.Controls.Add(CPYlabel);
+            CPModCB.Controls.Add(CPXLabel);
+            CPModCB.Controls.Add(controlPointvalLabel);
+            CPModCB.Controls.Add(CPXCB);
+            CPModCB.Controls.Add(ConfirmCPButton);
+            CPModCB.Controls.Add(CPYCB);
+            CPModCB.Controls.Add(CPVal);
+            CPModCB.Location = new Point(292, 330);
+            CPModCB.Name = "CPModCB";
+            CPModCB.Size = new Size(250, 125);
+            CPModCB.TabIndex = 23;
+            CPModCB.TabStop = false;
+            CPModCB.Text = "modyfikacja pkt kontrolnych";
+            // 
+            // CPYlabel
+            // 
+            CPYlabel.AutoSize = true;
+            CPYlabel.Location = new Point(111, 32);
+            CPYlabel.Name = "CPYlabel";
+            CPYlabel.Size = new Size(19, 20);
+            CPYlabel.TabIndex = 24;
+            CPYlabel.Text = "y:";
+            // 
+            // CPXLabel
+            // 
+            CPXLabel.AutoSize = true;
+            CPXLabel.Location = new Point(5, 29);
+            CPXLabel.Name = "CPXLabel";
+            CPXLabel.Size = new Size(19, 20);
+            CPXLabel.TabIndex = 23;
+            CPXLabel.Text = "x:";
+            // 
+            // controlPointvalLabel
+            // 
+            controlPointvalLabel.AutoSize = true;
+            controlPointvalLabel.Location = new Point(20, 61);
+            controlPointvalLabel.Name = "controlPointvalLabel";
+            controlPointvalLabel.Size = new Size(60, 20);
+            controlPointvalLabel.TabIndex = 22;
+            controlPointvalLabel.Text = "wartosc";
+            // 
+            // CPXCB
+            // 
+            CPXCB.FormattingEnabled = true;
+            CPXCB.Items.AddRange(new object[] { "0", "1", "2", "3" });
+            CPXCB.Location = new Point(27, 26);
+            CPXCB.Name = "CPXCB";
+            CPXCB.Size = new Size(42, 28);
+            CPXCB.TabIndex = 18;
+            // 
+            // ConfirmCPButton
+            // 
+            ConfirmCPButton.Location = new Point(123, 82);
+            ConfirmCPButton.Name = "ConfirmCPButton";
+            ConfirmCPButton.Size = new Size(94, 29);
+            ConfirmCPButton.TabIndex = 21;
+            ConfirmCPButton.Text = "potwierdź";
+            ConfirmCPButton.UseVisualStyleBackColor = true;
+            ConfirmCPButton.Click += ConfirmCPButton_Click;
+            // 
+            // CPYCB
+            // 
+            CPYCB.FormattingEnabled = true;
+            CPYCB.Items.AddRange(new object[] { "0", "1", "2", "3" });
+            CPYCB.Location = new Point(136, 26);
+            CPYCB.Name = "CPYCB";
+            CPYCB.Size = new Size(42, 28);
+            CPYCB.TabIndex = 19;
+            // 
+            // CPVal
+            // 
+            CPVal.Location = new Point(20, 84);
+            CPVal.Name = "CPVal";
+            CPVal.Size = new Size(61, 27);
+            CPVal.TabIndex = 20;
+            // 
+            // SelectPicture
+            // 
+            SelectPicture.Location = new Point(9, 252);
+            SelectPicture.Name = "SelectPicture";
+            SelectPicture.Size = new Size(128, 74);
+            SelectPicture.TabIndex = 17;
+            SelectPicture.Text = "wybierz obraz do wypełnienia";
+            SelectPicture.UseVisualStyleBackColor = true;
+            SelectPicture.Click += SelectPicture_Click;
+            // 
+            // fillWPicture
+            // 
+            fillWPicture.AutoSize = true;
+            fillWPicture.Location = new Point(5, 222);
+            fillWPicture.Name = "fillWPicture";
+            fillWPicture.Size = new Size(148, 24);
+            fillWPicture.TabIndex = 16;
+            fillWPicture.TabStop = true;
+            fillWPicture.Text = "wypełnij obrazem";
+            fillWPicture.UseVisualStyleBackColor = true;
+            // 
+            // lightHeightLabel
+            // 
+            lightHeightLabel.AutoSize = true;
+            lightHeightLabel.Location = new Point(3, 344);
+            lightHeightLabel.Name = "lightHeightLabel";
+            lightHeightLabel.Size = new Size(167, 20);
+            lightHeightLabel.TabIndex = 15;
+            lightHeightLabel.Text = "wysokosc zrodla swiatla";
+            // 
+            // lightHeight
+            // 
+            lightHeight.Location = new Point(9, 367);
+            lightHeight.Name = "lightHeight";
+            lightHeight.Size = new Size(130, 56);
+            lightHeight.TabIndex = 14;
+            lightHeight.Value = 5;
+            lightHeight.ValueChanged += lightHeight_ValueChanged;
+            // 
+            // mLabel
+            // 
+            mLabel.AutoSize = true;
+            mLabel.Location = new Point(473, 14);
+            mLabel.Name = "mLabel";
+            mLabel.Size = new Size(22, 20);
+            mLabel.TabIndex = 13;
+            mLabel.Text = "m";
+            // 
+            // mBar
+            // 
+            mBar.Location = new Point(473, 37);
+            mBar.Maximum = 100;
+            mBar.Name = "mBar";
+            mBar.Orientation = Orientation.Vertical;
+            mBar.Size = new Size(56, 274);
+            mBar.TabIndex = 12;
+            mBar.Value = 1;
+            mBar.ValueChanged += mBar_ValueChanged;
+            // 
+            // ksLabel
+            // 
+            ksLabel.AutoSize = true;
+            ksLabel.Location = new Point(412, 14);
+            ksLabel.Name = "ksLabel";
+            ksLabel.Size = new Size(22, 20);
+            ksLabel.TabIndex = 11;
+            ksLabel.Text = "ks";
+            // 
+            // kdLabel
+            // 
+            kdLabel.AutoSize = true;
+            kdLabel.Location = new Point(339, 13);
+            kdLabel.Name = "kdLabel";
+            kdLabel.Size = new Size(28, 20);
+            kdLabel.TabIndex = 10;
+            kdLabel.Text = "kd:";
+            // 
+            // ksBar
+            // 
+            ksBar.Location = new Point(412, 37);
+            ksBar.Maximum = 100;
+            ksBar.Name = "ksBar";
+            ksBar.Orientation = Orientation.Vertical;
+            ksBar.Size = new Size(56, 274);
+            ksBar.TabIndex = 9;
+            ksBar.Value = 50;
+            ksBar.ValueChanged += trackBar1_ValueChanged;
+            // 
+            // kdBar
+            // 
+            kdBar.Location = new Point(339, 37);
+            kdBar.Maximum = 100;
+            kdBar.Name = "kdBar";
+            kdBar.Orientation = Orientation.Vertical;
+            kdBar.Size = new Size(56, 274);
+            kdBar.TabIndex = 8;
+            kdBar.Value = 50;
+            kdBar.ValueChanged += kdBar_ValueChanged;
+            // 
+            // PlainColorFIll
+            // 
+            PlainColorFIll.AutoSize = true;
+            PlainColorFIll.Checked = true;
+            PlainColorFIll.Location = new Point(9, 108);
+            PlainColorFIll.Name = "PlainColorFIll";
+            PlainColorFIll.Size = new Size(144, 24);
+            PlainColorFIll.TabIndex = 7;
+            PlainColorFIll.TabStop = true;
+            PlainColorFIll.Text = "wypelnij kolorem";
+            PlainColorFIll.UseVisualStyleBackColor = true;
+            PlainColorFIll.CheckedChanged += PlainColorFIll_CheckedChanged;
+            // 
+            // lightColorPick
+            // 
+            lightColorPick.Location = new Point(87, 130);
+            lightColorPick.Name = "lightColorPick";
+            lightColorPick.Size = new Size(78, 79);
+            lightColorPick.TabIndex = 6;
+            lightColorPick.Text = "wybierz\r\nkolor\r\nswiatla\r\n";
+            lightColorPick.UseVisualStyleBackColor = true;
+            lightColorPick.Click += lightColorPick_Click;
             // 
             // ObjColorPick
             // 
@@ -124,7 +372,7 @@
             // debug
             // 
             debug.AutoSize = true;
-            debug.Location = new Point(273, 12);
+            debug.Location = new Point(192, 13);
             debug.Name = "debug";
             debug.Size = new Size(50, 20);
             debug.TabIndex = 2;
@@ -137,17 +385,11 @@
             SizeLabel.Name = "SizeLabel";
             SizeLabel.Size = new Size(142, 20);
             SizeLabel.TabIndex = 1;
-            SizeLabel.Text = "Wymiar siatki [5-20]";
+            SizeLabel.Text = "Wymiar siatki [1-20]";
             // 
-            // lightColorPick
+            // selectPictureDialog
             // 
-            lightColorPick.Location = new Point(87, 130);
-            lightColorPick.Name = "lightColorPick";
-            lightColorPick.Size = new Size(78, 79);
-            lightColorPick.TabIndex = 6;
-            lightColorPick.Text = "wybierz\r\nkolor\r\nswiatla\r\n";
-            lightColorPick.UseVisualStyleBackColor = true;
-            lightColorPick.Click += lightColorPick_Click;
+            selectPictureDialog.FileName = "selectPictureDialog";
             // 
             // TriangleGrid
             // 
@@ -165,6 +407,12 @@
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)DrawingBox).EndInit();
+            CPModCB.ResumeLayout(false);
+            CPModCB.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)lightHeight).EndInit();
+            ((System.ComponentModel.ISupportInitialize)mBar).EndInit();
+            ((System.ComponentModel.ISupportInitialize)ksBar).EndInit();
+            ((System.ComponentModel.ISupportInitialize)kdBar).EndInit();
             ((System.ComponentModel.ISupportInitialize)GridSizeBar).EndInit();
             ResumeLayout(false);
         }
@@ -181,5 +429,26 @@
         private ColorDialog colorPickDIalog;
         private Button lightColorPick;
         private ColorDialog lightColorPickDIal;
+        private RadioButton PlainColorFIll;
+        private Label mLabel;
+        private TrackBar mBar;
+        private Label ksLabel;
+        private Label kdLabel;
+        private TrackBar ksBar;
+        private TrackBar kdBar;
+        private Label lightHeightLabel;
+        private TrackBar lightHeight;
+        private Button SelectPicture;
+        private RadioButton fillWPicture;
+        private OpenFileDialog selectPictureDialog;
+        private GroupBox CPModCB;
+        private ComboBox CPXCB;
+        private Button ConfirmCPButton;
+        private ComboBox CPYCB;
+        private TextBox CPVal;
+        private Label label1;
+        private Label CPYlabel;
+        private Label CPXLabel;
+        private Label controlPointvalLabel;
     }
 }
