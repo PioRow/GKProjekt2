@@ -30,15 +30,17 @@
         {
             splitContainer1 = new SplitContainer();
             DrawingBox = new PictureBox();
+            VecMapCheck = new CheckBox();
+            LoadVecMapBtn = new Button();
+            AnimationButton = new Button();
             label1 = new Label();
             CPModCB = new GroupBox();
+            CPHeight = new TrackBar();
             CPYlabel = new Label();
             CPXLabel = new Label();
             controlPointvalLabel = new Label();
             CPXCB = new ComboBox();
-            ConfirmCPButton = new Button();
             CPYCB = new ComboBox();
-            CPVal = new TextBox();
             SelectPicture = new Button();
             fillWPicture = new RadioButton();
             lightHeightLabel = new Label();
@@ -59,12 +61,14 @@
             colorPickDIalog = new ColorDialog();
             lightColorPickDIal = new ColorDialog();
             selectPictureDialog = new OpenFileDialog();
+            NormalMapDialog = new OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DrawingBox).BeginInit();
             CPModCB.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)CPHeight).BeginInit();
             ((System.ComponentModel.ISupportInitialize)lightHeight).BeginInit();
             ((System.ComponentModel.ISupportInitialize)mBar).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ksBar).BeginInit();
@@ -87,6 +91,9 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.BackColor = SystemColors.ActiveCaption;
+            splitContainer1.Panel2.Controls.Add(VecMapCheck);
+            splitContainer1.Panel2.Controls.Add(LoadVecMapBtn);
+            splitContainer1.Panel2.Controls.Add(AnimationButton);
             splitContainer1.Panel2.Controls.Add(label1);
             splitContainer1.Panel2.Controls.Add(CPModCB);
             splitContainer1.Panel2.Controls.Add(SelectPicture);
@@ -123,6 +130,37 @@
             DrawingBox.TabStop = false;
             DrawingBox.Paint += DrawingBox_Paint;
             // 
+            // VecMapCheck
+            // 
+            VecMapCheck.AutoSize = true;
+            VecMapCheck.Location = new Point(13, 535);
+            VecMapCheck.Name = "VecMapCheck";
+            VecMapCheck.Size = new Size(223, 24);
+            VecMapCheck.TabIndex = 27;
+            VecMapCheck.Text = "modyfikuj o wczytany wektor";
+            VecMapCheck.UseVisualStyleBackColor = true;
+            VecMapCheck.CheckedChanged += VecMapCheck_CheckedChanged;
+            // 
+            // LoadVecMapBtn
+            // 
+            LoadVecMapBtn.Location = new Point(40, 565);
+            LoadVecMapBtn.Name = "LoadVecMapBtn";
+            LoadVecMapBtn.Size = new Size(113, 93);
+            LoadVecMapBtn.TabIndex = 26;
+            LoadVecMapBtn.Text = "Wczytaj Mape Wektorow";
+            LoadVecMapBtn.UseVisualStyleBackColor = true;
+            LoadVecMapBtn.Click += LoadVecMapBtn_Click;
+            // 
+            // AnimationButton
+            // 
+            AnimationButton.Location = new Point(9, 429);
+            AnimationButton.Name = "AnimationButton";
+            AnimationButton.Size = new Size(126, 65);
+            AnimationButton.TabIndex = 25;
+            AnimationButton.Text = "Rozpocznij animacje";
+            AnimationButton.UseVisualStyleBackColor = true;
+            AnimationButton.Click += AnimationButton_Click;
+            // 
             // label1
             // 
             label1.AutoSize = true;
@@ -134,19 +172,26 @@
             // 
             // CPModCB
             // 
+            CPModCB.Controls.Add(CPHeight);
             CPModCB.Controls.Add(CPYlabel);
             CPModCB.Controls.Add(CPXLabel);
             CPModCB.Controls.Add(controlPointvalLabel);
             CPModCB.Controls.Add(CPXCB);
-            CPModCB.Controls.Add(ConfirmCPButton);
             CPModCB.Controls.Add(CPYCB);
-            CPModCB.Controls.Add(CPVal);
             CPModCB.Location = new Point(292, 330);
             CPModCB.Name = "CPModCB";
             CPModCB.Size = new Size(250, 125);
             CPModCB.TabIndex = 23;
             CPModCB.TabStop = false;
             CPModCB.Text = "modyfikacja pkt kontrolnych";
+            // 
+            // CPHeight
+            // 
+            CPHeight.Location = new Point(93, 60);
+            CPHeight.Name = "CPHeight";
+            CPHeight.Size = new Size(130, 56);
+            CPHeight.TabIndex = 25;
+            CPHeight.ValueChanged += CPHeight_ValueChanged;
             // 
             // CPYlabel
             // 
@@ -169,7 +214,7 @@
             // controlPointvalLabel
             // 
             controlPointvalLabel.AutoSize = true;
-            controlPointvalLabel.Location = new Point(20, 61);
+            controlPointvalLabel.Location = new Point(27, 73);
             controlPointvalLabel.Name = "controlPointvalLabel";
             controlPointvalLabel.Size = new Size(60, 20);
             controlPointvalLabel.TabIndex = 22;
@@ -183,16 +228,7 @@
             CPXCB.Name = "CPXCB";
             CPXCB.Size = new Size(42, 28);
             CPXCB.TabIndex = 18;
-            // 
-            // ConfirmCPButton
-            // 
-            ConfirmCPButton.Location = new Point(123, 82);
-            ConfirmCPButton.Name = "ConfirmCPButton";
-            ConfirmCPButton.Size = new Size(94, 29);
-            ConfirmCPButton.TabIndex = 21;
-            ConfirmCPButton.Text = "potwierdź";
-            ConfirmCPButton.UseVisualStyleBackColor = true;
-            ConfirmCPButton.Click += ConfirmCPButton_Click;
+            CPXCB.SelectedIndexChanged += CPXCB_SelectedIndexChanged;
             // 
             // CPYCB
             // 
@@ -202,13 +238,7 @@
             CPYCB.Name = "CPYCB";
             CPYCB.Size = new Size(42, 28);
             CPYCB.TabIndex = 19;
-            // 
-            // CPVal
-            // 
-            CPVal.Location = new Point(20, 84);
-            CPVal.Name = "CPVal";
-            CPVal.Size = new Size(61, 27);
-            CPVal.TabIndex = 20;
+            CPYCB.SelectedIndexChanged += CPYCB_SelectedIndexChanged;
             // 
             // SelectPicture
             // 
@@ -243,10 +273,12 @@
             // lightHeight
             // 
             lightHeight.Location = new Point(9, 367);
+            lightHeight.Maximum = 20;
+            lightHeight.Minimum = 10;
             lightHeight.Name = "lightHeight";
             lightHeight.Size = new Size(130, 56);
             lightHeight.TabIndex = 14;
-            lightHeight.Value = 5;
+            lightHeight.Value = 10;
             lightHeight.ValueChanged += lightHeight_ValueChanged;
             // 
             // mLabel
@@ -391,6 +423,10 @@
             // 
             selectPictureDialog.FileName = "selectPictureDialog";
             // 
+            // NormalMapDialog
+            // 
+            NormalMapDialog.FileName = "openFileDialog1";
+            // 
             // TriangleGrid
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -409,6 +445,7 @@
             ((System.ComponentModel.ISupportInitialize)DrawingBox).EndInit();
             CPModCB.ResumeLayout(false);
             CPModCB.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)CPHeight).EndInit();
             ((System.ComponentModel.ISupportInitialize)lightHeight).EndInit();
             ((System.ComponentModel.ISupportInitialize)mBar).EndInit();
             ((System.ComponentModel.ISupportInitialize)ksBar).EndInit();
@@ -450,5 +487,10 @@
         private Label CPYlabel;
         private Label CPXLabel;
         private Label controlPointvalLabel;
+        private Button AnimationButton;
+        private TrackBar CPHeight;
+        private CheckBox VecMapCheck;
+        private Button LoadVecMapBtn;
+        private OpenFileDialog NormalMapDialog;
     }
 }

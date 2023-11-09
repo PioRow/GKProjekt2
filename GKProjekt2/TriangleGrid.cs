@@ -1,4 +1,6 @@
+using System.Media;
 using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 
 namespace GKProjekt2
 {
@@ -7,17 +9,22 @@ namespace GKProjekt2
         private List<Polygon> Polygons;
         private DirectBitmap DrawingBitMap;
         private Color[,] Source;
+        private Color[,] NormalMap;
         private double[,] ControlPoints;
         private string FilePath;
+        private string MapPath;
         double[] LightSource;
         double kd = 0.5;
         double ks = 0.5;
         int m = 1;
         int ActualWidth;
         int ActualHeight;
+        bool animRunning = false;
         Color ObjectColor;
         Color LightColor;
         Vector V;
+        System.Windows.Forms.Timer timer;
+        double currAngle;
         public TriangleGrid()
         {
             ObjectColor = Color.FromArgb(255, 255, 255);
@@ -26,13 +33,16 @@ namespace GKProjekt2
             LightColor = Color.FromArgb(255, 255, 255);
             Polygons = new List<Polygon>();
             ControlPoints = new double[4, 4];
-           
             V = new Vector(0, 0, 1);
-            LightSource = new double[3] { 0.5, 0.5, 0.5 };
+            LightSource = new double[3] { 0.5, 0.5, 1 };
             CreateGrid();
             Source = new Color[ActualWidth + 1, ActualHeight + 1];
+            NormalMap = new Color[ActualWidth + 1, ActualHeight + 1];
             FIllWithColor();
             PutTriangles();
+            timer = new System.Windows.Forms.Timer();
+            timer.Interval = 33;
+            timer.Tick += RunAnimation;
 
         }
         private void PutTriangles()
@@ -54,7 +64,7 @@ namespace GKProjekt2
                 Parallel.ForEach(Polygons, Polygon =>
                 {
                     Polygon.FillPolygonWIthLightedColor(DrawingBitMap, ObjectColor, LightColor,
-                    kd, ks, m, LightSource, ActualHeight, ActualHeight, V);
+                    kd, ks, m, LightSource, ActualHeight, ActualHeight, V,NormalMap,VecMapCheck.Checked);
                 });
             }
             if (fillWPicture.Checked)
@@ -62,7 +72,7 @@ namespace GKProjekt2
                 Parallel.ForEach(Polygons, Polygon =>
                 {
                     Polygon.FillPolygonWIthLightedImage(DrawingBitMap, Source, LightColor,
-                    kd, ks, m, LightSource, ActualHeight, ActualHeight, V);
+                    kd, ks, m, LightSource, ActualHeight, ActualHeight, V, NormalMap, VecMapCheck.Checked);
                 });
             }
         }
@@ -91,6 +101,14 @@ namespace GKProjekt2
         {
             return factorial(n) / (factorial(i) * factorial(n - i)) * Math.Pow(t, i) * Math.Pow(1 - t, n - i);
         }
+        private double dB_dt(int i, int n, double t)
+        {
+            if (i == 0)
+                return -3 * Math.Pow(1 - t, n - 1);
+            if (i == 3)
+                return 3 * Math.Pow(t, 2);
+            return factorial(n) / (factorial(i) * factorial(n - i)) * (i * Math.Pow(t, i - 1) * Math.Pow(1 - t, n - i) - ((n - i) * Math.Pow(t, i) * Math.Pow(1 - t, n - i - 1)));
+        }
         private double Zxy(double x, double y)
         {
             double res = 0.0;
@@ -104,7 +122,7 @@ namespace GKProjekt2
             double res = 0.0;
             for (int i = 0; i < 4; i++)
                 for (int j = 0; j < 4; j++)
-                    res += ControlPoints[i, j] * (B(i, 3, u - 1) - B(i, 3, u)) * B(j, 3, v);
+                    res += ControlPoints[i, j] * dB_dt(i, 3, u) * B(j, 3, v);
             return res;
         }
         private double Dz_dv(double u, double v)
@@ -112,7 +130,7 @@ namespace GKProjekt2
             double res = 0.0;
             for (int i = 0; i < 4; i++)
                 for (int j = 0; j < 4; j++)
-                    res += ControlPoints[i, j] * B(i, 3, u) * (B(j, 3, v - 1) - B(j, 3, v));
+                    res += ControlPoints[i, j] * B(i, 3, u) * dB_dt(j, 3, v);
             return res;
         }
         private void CreateLowerTriangle(int i, int j, int armLength)
@@ -197,32 +215,7 @@ namespace GKProjekt2
             }
             Polygons.Add(T1);
         }
-        private void DrawingBox_Paint(object sender, PaintEventArgs e)
-        {
 
-            e.Graphics.DrawImage(DrawingBitMap.Bitmap, 0, 0);
-
-        }
-
-        private void GridSizeBar_ValueChanged(object sender, EventArgs e)
-        {
-
-
-            Polygons.Clear();
-            CreateGrid();
-            Graphics.FromImage(DrawingBitMap.Bitmap).Clear(Color.White);
-            Source = new Color[ActualWidth + 1, ActualHeight + 1];
-            if (fillWPicture.Checked)
-            {
-                Bitmap sc = new Bitmap(Image.FromFile(FilePath), new Size(ActualHeight, ActualWidth));
-                for (int i = 0; i < sc.Width; i++)
-                {
-                    for (int j = 0; j < sc.Height; j++)
-                        Source[i, j] = sc.GetPixel(i, j);
-                }
-            }
-            BitmapFiller();
-        }
         private void BitmapFiller()
         {
             FIllWithColor();
@@ -242,83 +235,34 @@ namespace GKProjekt2
 
         }
 
-        private void ShowGrid_CheckedChanged(object sender, EventArgs e)
-        {
-            BitmapFiller();
-        }
 
-        private void lightColorPick_Click(object sender, EventArgs e)
+
+        private void RunAnimation(object sender, EventArgs e)
         {
-            if (lightColorPickDIal.ShowDialog() == DialogResult.OK)
+            double alfa = (Math.PI * 2) / 24;
+            LightSource[0] = 0.5 + 0.25 * Math.Cos(currAngle);
+            LightSource[1] = 0.5 + 0.25 * Math.Sin(currAngle);
+            currAngle += alfa;
+            BitmapFiller();
+
+        }
+        private void AnimationButton_Click(object sender, EventArgs e)
+        {
+            animRunning = !animRunning;
+
+            if (animRunning)
             {
-                LightColor = lightColorPickDIal.Color;
+
+
+                currAngle = 0.0;
+                timer.Start();
             }
-            BitmapFiller();
-        }
-
-        private void kdBar_ValueChanged(object sender, EventArgs e)
-        {
-            kd = (double)kdBar.Value / 100;
-            BitmapFiller();
-        }
-
-        private void trackBar1_ValueChanged(object sender, EventArgs e)
-        {
-            ks = (double)ksBar.Value / 100;
-            BitmapFiller();
-        }
-
-        private void mBar_ValueChanged(object sender, EventArgs e)
-        {
-            m = mBar.Value;
-            BitmapFiller();
-        }
-
-        private void lightHeight_ValueChanged(object sender, EventArgs e)
-        {
-            LightSource[2] = (double)lightHeight.Value / 10;
-            BitmapFiller();
-        }
-
-        private void PlainColorFIll_CheckedChanged(object sender, EventArgs e)
-        {
-            BitmapFiller();
-        }
-
-        private void SelectPicture_Click(object sender, EventArgs e)
-        {
-            selectPictureDialog.InitialDirectory = System.Environment.CurrentDirectory + "\\Pictures";
-            selectPictureDialog.Filter = "JPEG Images|*.jpg";
-            if (selectPictureDialog.ShowDialog() == DialogResult.OK)
+            else
             {
-                FilePath = selectPictureDialog.FileName;
-                Bitmap sc = new Bitmap(Image.FromFile(FilePath), new Size(ActualHeight, ActualWidth));
-                for (int i = 0; i < sc.Width; i++)
-                {
-                    for (int j = 0; j < sc.Height; j++)
-                        Source[i, j] = sc.GetPixel(i, j);
-                }
-            }
-            BitmapFiller();
-        }
-
-        private void ConfirmCPButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                int x, y;
-                x = CPXCB.SelectedIndex;
-                y = CPYCB.SelectedIndex;
-                double val = double.Parse(CPVal.Text);
-                ControlPoints[x,y]= val;
-                Polygons.Clear();
-                CreateGrid();
+                timer.Stop();
+                LightSource[0] = LightSource[1] = 0.5;
                 BitmapFiller();
-             }
-            catch(Exception exc) {
-                debug.Text=exc.Message;
             }
-            
         }
     }
 }

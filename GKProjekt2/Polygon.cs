@@ -95,7 +95,10 @@ namespace GKProjekt2
         {
             return new Vector(lambda * v1.X, lambda * v1.Y, lambda * v1.Z);
         }
-  
+        public static Vector operator-(Vector v1,Vector v2)
+        {
+            return new Vector(v1.X - v2.X, v1.Y - v2.Y, v1.Z - v2.Z);
+        }
     }
     internal class Polygon
     {
@@ -113,7 +116,7 @@ namespace GKProjekt2
         }
         public Vector[] NormalVecotrs;
         public void FillPolygonWIthLightedImage(DirectBitmap DrawingBitmap, Color[,] Source, Color LightColor, double kd, double ks, int m, double[] LS,
-            int AW, int AH, Vector V)
+            int AW, int AH, Vector V, Color[,]NormalMap,bool addTexture)
         {
             double det1overR = ScaledPoints[0].X * (ScaledPoints[1].Y - ScaledPoints[2].Y) + ScaledPoints[1].X * (ScaledPoints[2].Y - ScaledPoints[0].Y) + ScaledPoints[2].X * (ScaledPoints[0].Y - ScaledPoints[1].Y);
             int N = points.Count;//ilosc punktow
@@ -175,10 +178,11 @@ namespace GKProjekt2
                         Vector L = new Vector(LS[0] - Xp, LS[1] - Yp, LS[2] - Zp);
                         Np.Normalize();
                         L.Normalize();
-                        Vector Rv = (2 * Np.dotProduct(L) * Np) + ((-1) * L);
-
-                        double cosmVR = Math.Pow(V.dotProduct(Rv), m);
+                        Vector Rv = ((2 * Np.dotProduct(L)) * Np) - L;
+                        Rv.Normalize();
+                        double cosmVR = (V.dotProduct(Rv));
                         cosmVR = cosmVR > 0 ? cosmVR : 0;
+                        cosmVR = Math.Pow(cosmVR, m);
                         double cosNL = Np.dotProduct(L);
                         cosNL = cosNL > 0 ? cosNL : 0;
                         Color SC = Source[curX, y];
@@ -204,7 +208,7 @@ namespace GKProjekt2
         }
     
             public void FillPolygonWIthLightedColor(DirectBitmap DrawingBitmap, Color ObjectColor,Color LightColor,double kd,double ks,int m, double[]LS,
-            int AW,int AH,Vector V)
+            int AW,int AH,Vector V, Color[,] NormalMap, bool addTexture)
         {
             double kdR = kd * ((double)LightColor.R / 255) * ((double)ObjectColor.R / 255);
             double kdG = kd * ((double)LightColor.G / 255) * ((double)ObjectColor.G / 255);
@@ -271,11 +275,20 @@ namespace GKProjekt2
                         Vector Np = ((lambdas[0] * NormalVecotrs[0]) + (lambdas[1] * NormalVecotrs[1]) + (lambdas[2] * NormalVecotrs[2]));
                         Vector L=new Vector(LS[0] - Xp, LS[1]-Yp, LS[2] - Zp);
                         Np.Normalize();
-                        L.Normalize();
-                        Vector Rv = (2 * Np.dotProduct(L) * Np)+((-1) * L);
+                        if (addTexture)
+                        {
+                            Color Texture = NormalMap[curX, y];
+                            Vector Bt = Np.crossProduct(new Vector(0, 0, 1));
+                            Vector Tt = Bt.crossProduct(Np);
+
+                        }
                         
-                        double cosmVR = Math.Pow(V.dotProduct(Rv), m);
+                        L.Normalize();
+                        Vector Rv = ((2 * Np.dotProduct(L)) * Np) - L;
+                        Rv.Normalize();
+                        double cosmVR = V.dotProduct(Rv);
                         cosmVR= cosmVR>0?cosmVR:0;
+                        cosmVR = Math.Pow(cosmVR, m);
                         double cosNL = Np.dotProduct(L);
                         cosNL = cosNL > 0 ? cosNL : 0;
 
