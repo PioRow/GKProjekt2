@@ -120,18 +120,18 @@ namespace GKProjekt2
         private double Dz_du(double u, double v)
         {
             double res = 0.0;
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 4; j++)
-                    res += ControlPoints[i, j] * dB_dt(i, 3, u) * B(j, 3, v);
-            return res;
+                    res += (ControlPoints[i+1, j] - ControlPoints[i,j]) * B(i, 2, u) * B(j, 3, v);
+            return 3*res;
         }
         private double Dz_dv(double u, double v)
         {
             double res = 0.0;
             for (int i = 0; i < 4; i++)
-                for (int j = 0; j < 4; j++)
-                    res += ControlPoints[i, j] * B(i, 3, u) * dB_dt(j, 3, v);
-            return res;
+                for (int j = 0; j < 3; j++)
+                    res += (ControlPoints[i, j + 1] - ControlPoints[i,j]) * B(i, 3, u) * B(j, 2, v);
+            return 3*res;
         }
         private void CreateLowerTriangle(int i, int j, int armLength)
         {

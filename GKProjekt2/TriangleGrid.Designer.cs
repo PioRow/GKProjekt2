@@ -294,6 +294,7 @@
             // 
             mBar.Location = new Point(473, 37);
             mBar.Maximum = 100;
+            mBar.Minimum = 1;
             mBar.Name = "mBar";
             mBar.Orientation = Orientation.Vertical;
             mBar.Size = new Size(56, 274);

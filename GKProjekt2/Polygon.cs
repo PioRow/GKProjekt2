@@ -20,7 +20,7 @@ namespace GKProjekt2
     public class ActiveEdgeNode
     {
         public int ymax;
-        public int x;
+        public double x;
         public double oneOverM;
         public bool isHorizontal;
         public Point Start;
@@ -163,7 +163,7 @@ namespace GKProjekt2
                 AET.Sort((e1, e2) => e1.x.CompareTo(e2.x));
                 for (int j = 0; j < AET.Count - 1; j += 2)
                 {
-                    for (int curX = AET[j].x; curX <= AET[j + 1].x; curX++)
+                    for (int curX = (int)AET[j].x; curX <= (int)AET[j + 1].x; curX++)
                     {
                         double Xp = (double)curX / AW;
                         double Yp = (double)y / AH;
@@ -177,6 +177,26 @@ namespace GKProjekt2
                         Vector Np = ((lambdas[0] * NormalVecotrs[0]) + (lambdas[1] * NormalVecotrs[1]) + (lambdas[2] * NormalVecotrs[2]));
                         Vector L = new Vector(LS[0] - Xp, LS[1] - Yp, LS[2] - Zp);
                         Np.Normalize();
+                        if (addTexture)
+                        {
+                            Color Texture = NormalMap[curX, y];
+                            Vector PomV = new Vector(0, 0, 1);
+                            Vector Bt;
+                            if (Np.X == 0 && Np.Y == 0 && Np.Z == 1)
+                                Bt = new Vector(0, 1, 0);
+                            else
+                                Bt = Np.crossProduct(PomV);
+                            Bt.Normalize();
+                            Vector Tt = Bt.crossProduct(Np);
+                            Tt.Normalize();
+                            double Tx = ((double)(Texture.R) / 255.0f) * 2 - 1;
+                            double Ty = ((double)(Texture.G) / 255.0f) * 2 - 1;
+                            double Tz = ((double)(Texture.B) / 255.0f);
+                            Vector nNp = new Vector(Tt.X * Tx + Bt.X * Ty + Np.X * Tz, Tt.Y * Tx + Bt.Y * Ty + Np.Y * Tz, Tt.Z * Tx + Bt.Z * Ty + Np.Z * Tz);
+                            nNp.Normalize();
+                            Np = nNp;
+                            Np.Normalize();
+                        }
                         L.Normalize();
                         Vector Rv = ((2 * Np.dotProduct(L)) * Np) - L;
                         Rv.Normalize();
@@ -261,7 +281,7 @@ namespace GKProjekt2
                 AET.Sort((e1, e2) => e1.x.CompareTo(e2.x));
                 for (int j = 0; j < AET.Count - 1; j += 2)
                 {
-                    for (int curX = AET[j].x; curX <= AET[j + 1].x; curX++)
+                    for (int curX = (int)AET[j].x; curX <= (int)AET[j + 1].x; curX++)
                     {
                         double Xp = (double)curX / AW;
                         double Yp = (double)y / AH;
@@ -274,16 +294,28 @@ namespace GKProjekt2
                         double Zp = (lambdas[0] * Zs[0]) + (lambdas[1] * Zs[1]) + (lambdas[2] * Zs[2]);
                         Vector Np = ((lambdas[0] * NormalVecotrs[0]) + (lambdas[1] * NormalVecotrs[1]) + (lambdas[2] * NormalVecotrs[2]));
                         Vector L=new Vector(LS[0] - Xp, LS[1]-Yp, LS[2] - Zp);
+                        L.Normalize();
                         Np.Normalize();
                         if (addTexture)
                         {
                             Color Texture = NormalMap[curX, y];
-                            Vector Bt = Np.crossProduct(new Vector(0, 0, 1));
+                            Vector PomV = new Vector(0, 0, 1);
+                            Vector Bt;
+                            if (Np.X == 0 && Np.Y == 0 && Np.Z == 1)
+                                Bt = new Vector(0, 1, 0);
+                            else
+                                Bt = Np.crossProduct(PomV);
+                            Bt.Normalize();
                             Vector Tt = Bt.crossProduct(Np);
-
+                            Tt.Normalize();
+                            double Tx = ((double)(Texture.R) / 255.0f) * 2 - 1;
+                            double Ty = ((double)(Texture.G) / 255.0f) * 2 - 1;
+                            double Tz = ((double)(Texture.B) / 255.0f);
+                            Vector nNp = new Vector(Tt.X * Tx + Bt.X*Ty+ Np.X*Tz, Tt.Y * Tx + Bt.Y * Ty + Np.Y * Tz, Tt.Z * Tx + Bt.Z * Ty + Np.Z * Tz);
+                            nNp.Normalize();
+                            Np = nNp;
+                            Np.Normalize();
                         }
-                        
-                        L.Normalize();
                         Vector Rv = ((2 * Np.dotProduct(L)) * Np) - L;
                         Rv.Normalize();
                         double cosmVR = V.dotProduct(Rv);
@@ -292,8 +324,7 @@ namespace GKProjekt2
                         double cosNL = Np.dotProduct(L);
                         cosNL = cosNL > 0 ? cosNL : 0;
 
-                        double R = kdR * cosNL+
-                            ksR * cosmVR; ;
+                        double R = kdR * cosNL+ ksR * cosmVR; ;
                         double G = kdG * cosNL + ksG * cosmVR;
                         double B = kdB* cosNL + ksB * cosmVR;
                         R = R > 1 ? 1 : R;

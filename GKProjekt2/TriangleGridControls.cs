@@ -64,7 +64,6 @@ namespace GKProjekt2
         private void mBar_ValueChanged(object sender, EventArgs e)
         {
             m = mBar.Value;
-            debug.Text = m.ToString();
             BitmapFiller();
         }
 
@@ -72,7 +71,7 @@ namespace GKProjekt2
         {
             LightSource[2] = (double)lightHeight.Value / 10;
             BitmapFiller();
-            CPHeight.Value = 3;
+           
         }
 
         private void PlainColorFIll_CheckedChanged(object sender, EventArgs e)
@@ -170,13 +169,12 @@ namespace GKProjekt2
                         NormalMap[i, j] = sc.GetPixel(i, j);
                 }
             }
-            debug.Text = MapPath;
             BitmapFiller();
         }
 
         private void VecMapCheck_CheckedChanged(object sender, EventArgs e)
         {
-           
+            BitmapFiller();
         }
     }
 }
