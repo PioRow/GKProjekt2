@@ -83,16 +83,12 @@ namespace GKProjekt2
         {
             selectPictureDialog.InitialDirectory = System.Environment.CurrentDirectory + "\\Pictures";
             selectPictureDialog.Filter = "JPEG Images|*.jpg";
-            SoundPlayer player = new SoundPlayer(System.Environment.CurrentDirectory + "\\Pictures\\RadioheadJust.wav");
+            
             if (selectPictureDialog.ShowDialog() == DialogResult.OK)
             {
                 FilePath = selectPictureDialog.FileName;
 
                 Bitmap sc = new Bitmap(Image.FromFile(FilePath), new Size(ActualHeight, ActualWidth));
-                if (FilePath == System.Environment.CurrentDirectory + "\\Pictures\\2.jpg")
-                    player.Play();
-                else
-                    player.Stop();
                 for (int i = 0; i < sc.Width; i++)
                 {
                     for (int j = 0; j < sc.Height; j++)
