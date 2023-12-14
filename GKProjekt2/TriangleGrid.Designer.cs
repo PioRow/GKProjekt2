@@ -30,6 +30,14 @@
         {
             splitContainer1 = new SplitContainer();
             DrawingBox = new PictureBox();
+            label4 = new Label();
+            label3 = new Label();
+            label2 = new Label();
+            bethaBar = new TrackBar();
+            alfaBar = new TrackBar();
+            chooseSurface = new GroupBox();
+            functionalS = new RadioButton();
+            BezierSurface = new RadioButton();
             VecMapCheck = new CheckBox();
             LoadVecMapBtn = new Button();
             AnimationButton = new Button();
@@ -62,11 +70,15 @@
             lightColorPickDIal = new ColorDialog();
             selectPictureDialog = new OpenFileDialog();
             NormalMapDialog = new OpenFileDialog();
+            FillSurface = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DrawingBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bethaBar).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)alfaBar).BeginInit();
+            chooseSurface.SuspendLayout();
             CPModCB.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)CPHeight).BeginInit();
             ((System.ComponentModel.ISupportInitialize)lightHeight).BeginInit();
@@ -91,6 +103,13 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.BackColor = SystemColors.ActiveCaption;
+            splitContainer1.Panel2.Controls.Add(FillSurface);
+            splitContainer1.Panel2.Controls.Add(label4);
+            splitContainer1.Panel2.Controls.Add(label3);
+            splitContainer1.Panel2.Controls.Add(label2);
+            splitContainer1.Panel2.Controls.Add(bethaBar);
+            splitContainer1.Panel2.Controls.Add(alfaBar);
+            splitContainer1.Panel2.Controls.Add(chooseSurface);
             splitContainer1.Panel2.Controls.Add(VecMapCheck);
             splitContainer1.Panel2.Controls.Add(LoadVecMapBtn);
             splitContainer1.Panel2.Controls.Add(AnimationButton);
@@ -113,6 +132,7 @@
             splitContainer1.Panel2.Controls.Add(GridSizeBar);
             splitContainer1.Panel2.Controls.Add(debug);
             splitContainer1.Panel2.Controls.Add(SizeLabel);
+            splitContainer1.Panel2.Paint += splitContainer1_Panel2_Paint;
             splitContainer1.Size = new Size(1541, 935);
             splitContainer1.SplitterDistance = 971;
             splitContainer1.SplitterWidth = 5;
@@ -121,7 +141,7 @@
             // DrawingBox
             // 
             DrawingBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            DrawingBox.Location = new Point(0, 0);
+            DrawingBox.Location = new Point(0, -1);
             DrawingBox.MaximumSize = new Size(914, 1067);
             DrawingBox.MinimumSize = new Size(914, 1067);
             DrawingBox.Name = "DrawingBox";
@@ -129,6 +149,88 @@
             DrawingBox.TabIndex = 0;
             DrawingBox.TabStop = false;
             DrawingBox.Paint += DrawingBox_Paint;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(8, 770);
+            label4.Name = "label4";
+            label4.Size = new Size(39, 20);
+            label4.TabIndex = 33;
+            label4.Text = "Beta";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(15, 710);
+            label3.Name = "label3";
+            label3.Size = new Size(36, 20);
+            label3.TabIndex = 32;
+            label3.Text = "Alfa";
+            label3.Click += label3_Click;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(19, 679);
+            label2.Name = "label2";
+            label2.Size = new Size(55, 20);
+            label2.TabIndex = 31;
+            label2.Text = "Obroty";
+            // 
+            // bethaBar
+            // 
+            bethaBar.Location = new Point(0, 796);
+            bethaBar.Maximum = 7;
+            bethaBar.Name = "bethaBar";
+            bethaBar.Size = new Size(130, 56);
+            bethaBar.TabIndex = 30;
+            bethaBar.ValueChanged += bethaBar_ValueChanged;
+            // 
+            // alfaBar
+            // 
+            alfaBar.Location = new Point(0, 734);
+            alfaBar.Maximum = 7;
+            alfaBar.Name = "alfaBar";
+            alfaBar.Size = new Size(130, 56);
+            alfaBar.TabIndex = 29;
+            alfaBar.ValueChanged += AlphaBar_ValueChanged;
+            // 
+            // chooseSurface
+            // 
+            chooseSurface.Controls.Add(functionalS);
+            chooseSurface.Controls.Add(BezierSurface);
+            chooseSurface.Location = new Point(279, 461);
+            chooseSurface.Name = "chooseSurface";
+            chooseSurface.Size = new Size(250, 125);
+            chooseSurface.TabIndex = 28;
+            chooseSurface.TabStop = false;
+            chooseSurface.Text = "wybór powierzchni";
+            chooseSurface.Enter += groupBox1_Enter;
+            // 
+            // functionalS
+            // 
+            functionalS.AutoSize = true;
+            functionalS.Location = new Point(12, 71);
+            functionalS.Name = "functionalS";
+            functionalS.Size = new Size(92, 24);
+            functionalS.TabIndex = 1;
+            functionalS.Text = "funkcyjna";
+            functionalS.UseVisualStyleBackColor = true;
+            functionalS.CheckedChanged += functionalS_CheckedChanged;
+            // 
+            // BezierSurface
+            // 
+            BezierSurface.AutoSize = true;
+            BezierSurface.Checked = true;
+            BezierSurface.Location = new Point(14, 39);
+            BezierSurface.Name = "BezierSurface";
+            BezierSurface.Size = new Size(71, 24);
+            BezierSurface.TabIndex = 0;
+            BezierSurface.TabStop = true;
+            BezierSurface.Text = "Bezier";
+            BezierSurface.UseVisualStyleBackColor = true;
+            BezierSurface.CheckedChanged += BezierSurface_CheckedChanged;
             // 
             // VecMapCheck
             // 
@@ -428,6 +530,18 @@
             // 
             NormalMapDialog.FileName = "openFileDialog1";
             // 
+            // FillSurface
+            // 
+            FillSurface.AutoSize = true;
+            FillSurface.Checked = true;
+            FillSurface.CheckState = CheckState.Checked;
+            FillSurface.Location = new Point(191, 55);
+            FillSurface.Name = "FillSurface";
+            FillSurface.Size = new Size(101, 24);
+            FillSurface.TabIndex = 34;
+            FillSurface.Text = "Fill surface";
+            FillSurface.UseVisualStyleBackColor = true;
+            // 
             // TriangleGrid
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -444,6 +558,10 @@
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)DrawingBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bethaBar).EndInit();
+            ((System.ComponentModel.ISupportInitialize)alfaBar).EndInit();
+            chooseSurface.ResumeLayout(false);
+            chooseSurface.PerformLayout();
             CPModCB.ResumeLayout(false);
             CPModCB.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)CPHeight).EndInit();
@@ -493,5 +611,14 @@
         private CheckBox VecMapCheck;
         private Button LoadVecMapBtn;
         private OpenFileDialog NormalMapDialog;
+        private GroupBox chooseSurface;
+        private RadioButton functionalS;
+        private RadioButton BezierSurface;
+        private Label label4;
+        private Label label3;
+        private Label label2;
+        private TrackBar bethaBar;
+        private TrackBar alfaBar;
+        private CheckBox FillSurface;
     }
 }
