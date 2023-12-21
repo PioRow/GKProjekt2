@@ -107,6 +107,7 @@ namespace GKProjekt2
         public List<Point> points;
         public ScaledPoint[] ScaledPoints;
         public double[] Zs;
+        public Color TriangleColor;
         public Polygon()
         {
             edges=new List<Edge>();
@@ -134,15 +135,21 @@ namespace GKProjekt2
             int AW, int AH, Vector V, int Width, int Height, Matrix4x4 M)
         {
             Vector3[] newPoints= new Vector3[3];
+            Vector3[] screenPoints = new Vector3[3];
             for(int i=0;i<3;i++)
             {
-                newPoints[i] = new Vector3(points[i].X, points[i].Y,(int)(Zs[i] * 300));
+                newPoints[i] = new Vector3((float)ScaledPoints[i].X, (float)ScaledPoints[i].Y, (float)Zs[i]);
                 newPoints[i] = Vector3.Transform(newPoints[i], M);
+                screenPoints[i] = new Vector3(newPoints[i].X * (Width/2) + Width / 2, newPoints[i].Y * (Height/2) + Height / 2, newPoints[i].Z);
+                points[i] = new Point((int)screenPoints[i].X, (int)screenPoints[i].Y);
+                Zs[i] = screenPoints[i].Z;
             }
             Graphics g = Graphics.FromImage(DrawingBitmap.Bitmap);
             for(int i=0;i<3;i++)
             {
+                g.DrawLine(Pens.Black, screenPoints[i].X, screenPoints[i].Y, screenPoints[(i + 1) % 3].X, screenPoints[(i + 1) % 3].Y);
                 g.DrawLine(Pens.Black, newPoints[i].X, newPoints[i].Y, newPoints[(i + 1) % 3].X, newPoints[(i + 1) % 3].Y);
+                edges[i]=new Edge(points[i], points[(i+1)%3]);
             }
 
           /*  {
@@ -246,7 +253,7 @@ namespace GKProjekt2
             
         }
         public void FillPolygonWIthLightedImage(DirectBitmap DrawingBitmap, Color[,] Source, Color LightColor, double kd, double ks, int m, double[] LS,
-            int AW, int AH, Vector V, Color[,]NormalMap,bool addTexture,int Width,int Height,Matrix4x4 M)
+            int AW, int AH, Vector V, Color[,]NormalMap,bool addTexture,int Width,int Height,Matrix4x4 M, double[,] Zbuffer)
         {
             double det1overR = ScaledPoints[0].X * (ScaledPoints[1].Y - ScaledPoints[2].Y) + ScaledPoints[1].X * (ScaledPoints[2].Y - ScaledPoints[0].Y) + ScaledPoints[2].X * (ScaledPoints[0].Y - ScaledPoints[1].Y);
             int N = points.Count;//ilosc punktow
@@ -361,7 +368,7 @@ namespace GKProjekt2
         }
     
             public void FillPolygonWIthLightedColor(DirectBitmap DrawingBitmap, Color ObjectColor,Color LightColor,double kd,double ks,int m, double[]LS,
-            int AW,int AH,Vector V, Color[,] NormalMap, bool addTexture, int Width, int Height, Matrix4x4 M)
+            int AW,int AH,Vector V, Color[,] NormalMap, bool addTexture, int Width, int Height, Matrix4x4 M, double[,] Zbuffer)
         {
             double kdR = kd * ((double)LightColor.R / 255) * ((double)ObjectColor.R / 255);
             double kdG = kd * ((double)LightColor.G / 255) * ((double)ObjectColor.G / 255);
@@ -419,54 +426,21 @@ namespace GKProjekt2
                         double Xp = (double)curX / AW;
                         double Yp = (double)y / AH;
                         double[] lambdas = new double[3]
-                        {
+                       {
                             (ScaledPoints[1].X*ScaledPoints[2].Y-ScaledPoints[2].X*ScaledPoints[1].Y+Xp*(ScaledPoints[1].Y-ScaledPoints[2].Y)+Yp*(ScaledPoints[2].X-ScaledPoints[1].X))/det1overR,
                             (ScaledPoints[2].X*ScaledPoints[0].Y-ScaledPoints[0].X*ScaledPoints[2].Y+Xp*(ScaledPoints[2].Y-ScaledPoints[0].Y)+Yp*(ScaledPoints[0].X-ScaledPoints[2].X))/det1overR,
                             (ScaledPoints[0].X*ScaledPoints[1].Y-ScaledPoints[1].X*ScaledPoints[0].Y+Xp*(ScaledPoints[0].Y-ScaledPoints[1].Y)+Yp*(ScaledPoints[1].X-ScaledPoints[0].X))/det1overR,
-                        };
+                       };
                         double Zp = (lambdas[0] * Zs[0]) + (lambdas[1] * Zs[1]) + (lambdas[2] * Zs[2]);
-                        Vector Np = ((lambdas[0] * NormalVecotrs[0]) + (lambdas[1] * NormalVecotrs[1]) + (lambdas[2] * NormalVecotrs[2]));
-                        Vector L=new Vector(LS[0] - Xp, LS[1]-Yp, LS[2] - Zp);
-                        L.Normalize();
-                        Np.Normalize();
-                        if (addTexture)
-                        {
-                            Color Texture = NormalMap[curX, y];
-                            Vector PomV = new Vector(0, 0, 1);
-                            Vector Bt;
-                            if (Np.X == 0 && Np.Y == 0 && Np.Z == 1)
-                                Bt = new Vector(0, 1, 0);
-                            else
-                                Bt = Np.crossProduct(PomV);
-                            Bt.Normalize();
-                            Vector Tt = Bt.crossProduct(Np);
-                            Tt.Normalize();
-                            double Tx = ((double)(Texture.R) / 255.0f) * 2 - 1;
-                            double Ty = ((double)(Texture.G) / 255.0f) * 2 - 1;
-                            double Tz = ((double)(Texture.B) / 255.0f);
-                            Vector nNp = new Vector(Tt.X * Tx + Bt.X*Ty+ Np.X*Tz, Tt.Y * Tx + Bt.Y * Ty + Np.Y * Tz, Tt.Z * Tx + Bt.Z * Ty + Np.Z * Tz);
-                            nNp.Normalize();
-                            Np = nNp;
-                            Np.Normalize();
-                        }
-                        Vector Rv = ((2 * Np.dotProduct(L)) * Np) - L;
-                        Rv.Normalize();
-                        double cosmVR = V.dotProduct(Rv);
-                        cosmVR= cosmVR>0?cosmVR:0;
-                        cosmVR = Math.Pow(cosmVR, m);
-                        double cosNL = Np.dotProduct(L);
-                        cosNL = cosNL > 0 ? cosNL : 0;
 
-                        double R = kdR * cosNL+ ksR * cosmVR; ;
-                        double G = kdG * cosNL + ksG * cosmVR;
-                        double B = kdB* cosNL + ksB * cosmVR;
-                        R = R > 1 ? 1 : R;
-                        G=G > 1 ? 1 : G;  
-                        B = B > 1 ? 1 : B;
-                        Vector3 p = new Vector3(curX, y, (int)(300 * Zp));
-                        p = Vector3.Transform(p, M);
-                        if (p.X >= 0 && p.X <= Width && p.Y >= 0 && p.Y <= Height) 
-                            DrawingBitmap.SetPixel((int)p.X, (int)p.Y, Color.FromArgb((byte)(R*255), (byte)(G*255 ), (byte)(B*255 )));
+                        if (curX >= 0 && curX <= AW && y >= 0 && y <= AH)
+                        {
+                            if (Zp > Zbuffer[curX, y])
+                            {
+                                Zbuffer[curX, y] = Zp;
+                                DrawingBitmap.SetPixel(curX, y, TriangleColor);
+                            }
+                        }
                     }
                 }
                 for (int id = 0; id < AET.Count; id++)

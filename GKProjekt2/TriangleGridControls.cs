@@ -69,7 +69,7 @@ namespace GKProjekt2
 
         private void lightHeight_ValueChanged(object sender, EventArgs e)
         {
-            LightSource[2] = (double)lightHeight.Value / 10;
+            LightSource[2] = (double)lightHeight.Value / 5;
             BitmapFiller();
            
         }

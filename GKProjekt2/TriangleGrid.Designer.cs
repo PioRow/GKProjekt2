@@ -30,14 +30,12 @@
         {
             splitContainer1 = new SplitContainer();
             DrawingBox = new PictureBox();
+            FillSurface = new CheckBox();
             label4 = new Label();
             label3 = new Label();
             label2 = new Label();
             bethaBar = new TrackBar();
             alfaBar = new TrackBar();
-            chooseSurface = new GroupBox();
-            functionalS = new RadioButton();
-            BezierSurface = new RadioButton();
             VecMapCheck = new CheckBox();
             LoadVecMapBtn = new Button();
             AnimationButton = new Button();
@@ -70,7 +68,6 @@
             lightColorPickDIal = new ColorDialog();
             selectPictureDialog = new OpenFileDialog();
             NormalMapDialog = new OpenFileDialog();
-            FillSurface = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -78,7 +75,6 @@
             ((System.ComponentModel.ISupportInitialize)DrawingBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bethaBar).BeginInit();
             ((System.ComponentModel.ISupportInitialize)alfaBar).BeginInit();
-            chooseSurface.SuspendLayout();
             CPModCB.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)CPHeight).BeginInit();
             ((System.ComponentModel.ISupportInitialize)lightHeight).BeginInit();
@@ -109,7 +105,6 @@
             splitContainer1.Panel2.Controls.Add(label2);
             splitContainer1.Panel2.Controls.Add(bethaBar);
             splitContainer1.Panel2.Controls.Add(alfaBar);
-            splitContainer1.Panel2.Controls.Add(chooseSurface);
             splitContainer1.Panel2.Controls.Add(VecMapCheck);
             splitContainer1.Panel2.Controls.Add(LoadVecMapBtn);
             splitContainer1.Panel2.Controls.Add(AnimationButton);
@@ -149,6 +144,18 @@
             DrawingBox.TabIndex = 0;
             DrawingBox.TabStop = false;
             DrawingBox.Paint += DrawingBox_Paint;
+            // 
+            // FillSurface
+            // 
+            FillSurface.AutoSize = true;
+            FillSurface.Checked = true;
+            FillSurface.CheckState = CheckState.Checked;
+            FillSurface.Location = new Point(191, 55);
+            FillSurface.Name = "FillSurface";
+            FillSurface.Size = new Size(101, 24);
+            FillSurface.TabIndex = 34;
+            FillSurface.Text = "Fill surface";
+            FillSurface.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
@@ -195,42 +202,6 @@
             alfaBar.Size = new Size(130, 56);
             alfaBar.TabIndex = 29;
             alfaBar.ValueChanged += AlphaBar_ValueChanged;
-            // 
-            // chooseSurface
-            // 
-            chooseSurface.Controls.Add(functionalS);
-            chooseSurface.Controls.Add(BezierSurface);
-            chooseSurface.Location = new Point(279, 461);
-            chooseSurface.Name = "chooseSurface";
-            chooseSurface.Size = new Size(250, 125);
-            chooseSurface.TabIndex = 28;
-            chooseSurface.TabStop = false;
-            chooseSurface.Text = "wybór powierzchni";
-            chooseSurface.Enter += groupBox1_Enter;
-            // 
-            // functionalS
-            // 
-            functionalS.AutoSize = true;
-            functionalS.Location = new Point(12, 71);
-            functionalS.Name = "functionalS";
-            functionalS.Size = new Size(92, 24);
-            functionalS.TabIndex = 1;
-            functionalS.Text = "funkcyjna";
-            functionalS.UseVisualStyleBackColor = true;
-            functionalS.CheckedChanged += functionalS_CheckedChanged;
-            // 
-            // BezierSurface
-            // 
-            BezierSurface.AutoSize = true;
-            BezierSurface.Checked = true;
-            BezierSurface.Location = new Point(14, 39);
-            BezierSurface.Name = "BezierSurface";
-            BezierSurface.Size = new Size(71, 24);
-            BezierSurface.TabIndex = 0;
-            BezierSurface.TabStop = true;
-            BezierSurface.Text = "Bezier";
-            BezierSurface.UseVisualStyleBackColor = true;
-            BezierSurface.CheckedChanged += BezierSurface_CheckedChanged;
             // 
             // VecMapCheck
             // 
@@ -530,18 +501,6 @@
             // 
             NormalMapDialog.FileName = "openFileDialog1";
             // 
-            // FillSurface
-            // 
-            FillSurface.AutoSize = true;
-            FillSurface.Checked = true;
-            FillSurface.CheckState = CheckState.Checked;
-            FillSurface.Location = new Point(191, 55);
-            FillSurface.Name = "FillSurface";
-            FillSurface.Size = new Size(101, 24);
-            FillSurface.TabIndex = 34;
-            FillSurface.Text = "Fill surface";
-            FillSurface.UseVisualStyleBackColor = true;
-            // 
             // TriangleGrid
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -560,8 +519,6 @@
             ((System.ComponentModel.ISupportInitialize)DrawingBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)bethaBar).EndInit();
             ((System.ComponentModel.ISupportInitialize)alfaBar).EndInit();
-            chooseSurface.ResumeLayout(false);
-            chooseSurface.PerformLayout();
             CPModCB.ResumeLayout(false);
             CPModCB.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)CPHeight).EndInit();
@@ -611,9 +568,6 @@
         private CheckBox VecMapCheck;
         private Button LoadVecMapBtn;
         private OpenFileDialog NormalMapDialog;
-        private GroupBox chooseSurface;
-        private RadioButton functionalS;
-        private RadioButton BezierSurface;
         private Label label4;
         private Label label3;
         private Label label2;
